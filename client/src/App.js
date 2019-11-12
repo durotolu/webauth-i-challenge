@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import { Route, Redirect, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
+
+import SignUp from './SignUp';
+import User from './User';
+import Login from './Login';
 
 const initialForm = {
   username: '',
@@ -11,46 +15,13 @@ const initialForm = {
 
 function App() {
 
-  const [signUpForm, setSignUpForm] = useState(initialForm);
-
-  const isDisabled = () => {
-    return !signUpForm.username || !signUpForm.password;
-  }
-
-  const onFormInput = e => {
-    setSignUpForm({...signUpForm, [e.target.id]: e.target.value});
-  }
-
-  const addUser = e => {
-    e.preventDefault();
-    const newUser = {
-      username: signUpForm.username,
-      password: signUpForm.password,
-    }
-    axios.post('http://localhost:4000/api/auth/register', newUser)
-      .then(res => {
-        console.log(res)
-        debugger
-      })
-      .catch(err => {
-        console.log(err)
-        debugger
-      })
-    setSignUpForm(initialForm);
-  }
-
   return (
     <div className="App">
       <header className="App-header">
-        <form onSubmit={addUser}>
-          <label htmlFor="username">Username</label>
-          <input onChange={onFormInput} maxLength={50} value={signUpForm.username} id='username' type='text' />
-
-          <label htmlFor="password">Password</label>
-          <input onChange={onFormInput} value={signUpForm.password} id='password' type='password' />
-
-          <button disabled={isDisabled()}>Submit</button>
-        </form>
+        <Route exact path='/' render={() => <Redirect to ='/register'/>} />
+        <Route exact path='/register' render={(props) => <SignUp {...props} />} />
+        <Route exact path='/login' render={(props) => <Login {...props} />} />
+        <Route exact path='/user' render={() => <User />} />
       </header>
     </div>
   );
