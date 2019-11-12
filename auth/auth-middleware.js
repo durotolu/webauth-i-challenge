@@ -1,9 +1,16 @@
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-
+    sessionAuth
 }
 
+function sessionAuth(req, res, next) {
+    if(req.session && req.session.user) {
+        next();
+    } else {
+        res.status(400).json({ message: 'No credentials provided' });
+    };
+};
 
 function restricted(req, res, next) {
     const { username, password } = req.headers
